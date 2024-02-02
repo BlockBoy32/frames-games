@@ -1,16 +1,3 @@
-let dinoImage; // Declare a variable for the dinosaur image
-
-function loadDinoImage() {
-    dinoImage = new Image();
-    dinoImage.src = 'images/dino.png'; // Set the source to your dinosaur image path
-}
-
-function drawDino() {
-    if (dinoImage) {
-        ctx.drawImage(dinoImage, dino.x, dino.y, dino.width, dino.height);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -18,28 +5,30 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = 800;
     canvas.height = 400;
 
-    let dino, gravity, obstacle, score, jumping, gameStarted;
+    let dino, gravity, obstacle, score, jumping, gameStarted, dinoImage;
 
     function resetGame() {
-        dino = { height: 40, width: 40, x: 50, y: canvas.height - 40, vel: 0 };
+        dino = { height: 60, width: 60, x: 50, y: canvas.height - 70, vel: 0 }; // Adjusted for image size
         gravity = 1;
         obstacle = { width: 20, height: getRandomInt(20, 70), x: canvas.width };
         score = 0;
         jumping = false;
-        gameStarted = false; // Ensure game is marked as not started
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas for a fresh start
+        gameStarted = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function initializeGame() {
-        resetGame(); // Reset or initialize game variables
-        startButton.innerText = "Start Game"; // Set button text to "Start Game"
-        startButton.onclick = startGame; // Assign startGame function to onclick event of the button
+        loadDinoImage(() => { // Load the image and pass a callback to initialize game variables
+            resetGame();
+            startButton.innerText = "Start Game";
+            startButton.onclick = startGame;
+        });
     }
 
     function startGame() {
         if (!gameStarted) {
             gameStarted = true;
-            startButton.innerText = "Jump"; // Change button text to "Jump"
+            startButton.innerText = "Jump";
             updateGame();
         } else {
             jump();
@@ -56,9 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateGame() {
         if (!gameStarted) return;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas on each frame
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Update dino position
         if (jumping) {
             dino.y += dino.vel;
             dino.vel += gravity;
@@ -68,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Update obstacle position
         obstacle.x -= 7;
         if (obstacle.x < -obstacle.width) {
             obstacle.x = canvas.width;
@@ -95,17 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(message, color);
         gameStarted = false;
         startButton.innerText = "Restart";
-        startButton.onclick = initializeGame; // Re-assign onclick event to re-initialize the game
+        startButton.onclick = initializeGame; // Make sure to re-initialize the game on restart
     }
+
+    function loadDinoImage(callback) {
+        dinoImage = new Image();
+        dinoImage.onload = callback; // Call the passed callback function once the image is loaded
+        dinoImage.src = 'images/dino.png';
+    }
+
+    function drawDino() {
+        if (dinoImage) {
+            ctx.drawImage(dinoImage, dino.x, dino.y, dino.width, dino.height);
+        }
+    }
+
 
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function drawDino() {
-        ctx.fillStyle = 'black';
-        ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
-    }
+
 
     function drawObstacle() {
         ctx.fillStyle = 'black';
@@ -138,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    loadDinoImage(); // Make sure to load the image when the document is ready
 
     initializeGame(); // Initialize game when DOM is fully loaded
 });
