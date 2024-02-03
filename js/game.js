@@ -2,8 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const startButton = document.getElementById('startButton');
-    canvas.width = 800;
-    canvas.height = 400;
+    // Responsive canvas size
+    function resizeCanvas() {
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = window.innerHeight * 0.75;
+        if (gameStarted) {
+            // Optionally adjust game elements here
+            resetGame();
+        }
+    }
+    window.addEventListener('resize', resizeCanvas);
 
     let dino, gravity, obstacle, score, jumping, gameStarted, dinoImage;
 
@@ -19,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initializeGame() {
         loadDinoImage(() => { // Load the image and pass a callback to initialize game variables
+            resizeCanvas(); // Ensure canvas is correctly sized at start
+
             resetGame();
             startButton.innerText = "Start Game";
             startButton.onclick = startGame;

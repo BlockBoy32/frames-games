@@ -1,0 +1,20 @@
+runtime: nodejs14
+env: standard
+
+handlers:
+# Serve index.html for root URL
+- url: /
+  static_files: index.html
+  upload: index.html
+
+# Serve CSS files
+- url: /css
+  static_dir: css
+
+# Serve JavaScript files
+- url: /js
+  static_dir: js
+
+# Serve Image files
+- url: /images
+  static_dir: images
