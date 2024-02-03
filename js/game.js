@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetGame() {
         dino = { height: 60, width: 60, x: 50, y: canvas.height - 70, vel: 0 }; // Adjusted for image size
         gravity = 1;
-        obstacle = { width: 20, height: getRandomInt(20, 70), x: canvas.width };
+        obstacle = { width: 20, height: getRandomInt(20, 40), x: canvas.width };
         score = 0;
         jumping = false;
         gameStarted = false;
